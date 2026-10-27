@@ -6,10 +6,10 @@ Entregado en este paquete:
 - presets de referencia estética para seis sabores de bachata
 - GUI vectorial con micrófono luminoso y controles analógicos sobrios
 - scripts de compilación Windows e instalador Inno Setup
-- workflow opcional de GitHub Actions para compilar en Windows y publicar un artifact
+- workflow de GitHub Actions en .github/workflows/build-windows.yml para compilar VST3, generar Setup.exe y publicar un artifact
 
-Pendiente de verificar en Windows real:
-- compilar con JUCE 9.0.4 / Visual Studio 2022
+Pendiente de verificar mediante el workflow y en Windows real:
+- resultado de CI en Windows con JUCE 9.0.4 / Visual Studio 2022
 - cargar en FL Studio y confirmar escaneo VST3
 - medir latencia, CPU, automatización y restauración de estado del DAW
 - escuchar/ajustar los presets con voces reales y distintos BPM

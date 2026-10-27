@@ -1,6 +1,8 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+#include <cmath>
+
 namespace
 {
 constexpr const char* kPreset = "preset";
@@ -37,8 +39,8 @@ struct PresetValues
 // not measurements or claims about the artists' private studio settings.
 const std::array<PresetValues, 7> kPresets {{
     { 35.0f, true, 2, 2.00f, 52.0f, 78.0f, 24.0f, 140.0f, 8200.0f, 30.0f, 18.0f, false }, // Custom reset
-    { 38.0f, true, 2, 2.35f, 56.0f, 84.0f, 25.0f, 145.0f, 8800.0f, 34.0f, 22.0f, false }, // Romeo-style silky
-    { 23.0f, true, 0, 1.45f, 64.0f, 67.0f, 20.0f, 125.0f, 6100.0f, 48.0f, 13.0f, false }, // Raulín-style warm
+    { 38.0f, true, 3, 2.35f, 56.0f, 84.0f, 25.0f, 145.0f, 8800.0f, 34.0f, 22.0f, false }, // Romeo-style silky
+    { 23.0f, true, 1, 1.45f, 64.0f, 67.0f, 20.0f, 125.0f, 6100.0f, 48.0f, 13.0f, false }, // Raulín-style warm
     { 29.0f, true, 1, 1.90f, 58.0f, 76.0f, 22.0f, 135.0f, 7400.0f, 40.0f, 17.0f, false }, // Joe Veras-style
     { 34.0f, true, 2, 1.75f, 61.0f, 75.0f, 21.0f, 135.0f, 7000.0f, 43.0f, 15.0f, false }, // 2000s
     { 18.0f, true, 0, 1.20f, 69.0f, 61.0f, 18.0f, 115.0f, 5700.0f, 52.0f, 10.0f, false }, // 90s
@@ -152,7 +154,7 @@ void YMYVerbAudioProcessor::prepareToPlay (double sampleRate, int maximumExpecte
 {
     activeSampleRate = juce::jmax (8000.0, sampleRate);
     const int safeBlockSize = juce::jmax (1, maximumExpectedSamplesPerBlock);
-    preDelayCapacity = juce::jmax (safeBlockSize + 2, static_cast<int> (std::ceil (activeSampleRate * 0.75)) + safeBlockSize + 4);
+    preDelayCapacity = juce::jmax (safeBlockSize + 2, static_cast<int> (std::ceil (activeSampleRate * 1.25)) + safeBlockSize + 4);
     preDelayBuffer.setSize (2, preDelayCapacity, false, true, true);
     preDelayBuffer.clear();
     dryBuffer.setSize (2, safeBlockSize, false, true, true);
@@ -201,7 +203,7 @@ float YMYVerbAudioProcessor::getEffectivePreDelaySamples()
                                            juce::roundToInt (getParameter (kDivision)));
         delayMs = static_cast<float> ((60.0 / bpm) * 1000.0 * kDivisionBeats[static_cast<size_t> (division)]);
     }
-    delayMs = juce::jlimit (0.0f, 700.0f, delayMs);
+    delayMs = juce::jlimit (0.0f, 1200.0f, delayMs);
     effectivePreDelayMs.store (delayMs, std::memory_order_relaxed);
     return static_cast<float> (delayMs * 0.001 * activeSampleRate);
 }
@@ -246,7 +248,7 @@ void YMYVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
     const float hpA = std::exp (-juce::MathConstants<float>::twoPi * lowCut / static_cast<float> (activeSampleRate));
     const float lpA = 1.0f - std::exp (-juce::MathConstants<float>::twoPi * highCut / static_cast<float> (activeSampleRate));
     const float warmth = juce::jlimit (0.0f, 1.0f, getParameter (kWarmth) * 0.01f);
-    const float drive = 1.0f + warmth * 2.5f;
+    const float drive = 1.0f + warmth;
     const float inverseDrive = 1.0f / juce::jmax (1.0f, drive);
 
     double squareSum = 0.0;

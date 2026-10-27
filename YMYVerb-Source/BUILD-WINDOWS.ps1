@@ -1,3 +1,5 @@
+param([switch]$NoPause)
+
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
 Set-Location $PSScriptRoot
@@ -23,9 +25,25 @@ if (-not (Test-Path (Join-Path $jucePath 'CMakeLists.txt'))) {
 }
 
 $buildPath = Join-Path $PSScriptRoot 'build'
-Write-Host 'Configurando YMYVerb para Windows x64 (Visual Studio 2022)...' -ForegroundColor Cyan
-& cmake -S $PSScriptRoot -B $buildPath -G 'Visual Studio 17 2022' -A x64 "-DJUCE_PATH=$jucePath"
-if ($LASTEXITCODE -ne 0) { Fail 'CMake no pudo configurar el proyecto. Confirma que esten instaladas las herramientas C++ de Visual Studio 2022.' }
+$programFilesX86 = [Environment]::GetFolderPath('ProgramFilesX86')
+$vswherePath = Join-Path $programFilesX86 'Microsoft Visual Studio\Installer\vswhere.exe'
+$generator = $null
+if (Test-Path $vswherePath) {
+    $installationVersion = & $vswherePath -latest -property installationVersion
+    if ($LASTEXITCODE -eq 0 -and $installationVersion) {
+        $majorVersion = [int](($installationVersion -split '[.]')[0])
+        if ($majorVersion -ge 18) { $generator = 'Visual Studio 18 2026' }
+        elseif ($majorVersion -ge 17) { $generator = 'Visual Studio 17 2022' }
+        elseif ($majorVersion -ge 16) { $generator = 'Visual Studio 16 2019' }
+    }
+}
+if (-not $generator) {
+    Fail 'No se encontro una instalacion compatible de Visual Studio. Instala Visual Studio 2022/2026 o Build Tools con Desktop development with C++ y Windows SDK.'
+}
+
+Write-Host "Configurando YMYVerb para Windows x64 ($generator)..." -ForegroundColor Cyan
+& cmake -S $PSScriptRoot -B $buildPath -G $generator -A x64 "-DJUCE_PATH=$jucePath"
+if ($LASTEXITCODE -ne 0) { Fail "CMake no pudo configurar el proyecto con $generator. Comprueba el componente Desktop development with C++ y el Windows SDK." }
 
 Write-Host 'Compilando el VST3 en Release...' -ForegroundColor Cyan
 & cmake --build $buildPath --config Release --target YMYVerb_VST3 --parallel
@@ -71,5 +89,7 @@ if ($isccPath) {
     Write-Host "VST3: $pluginOut"
 }
 
-Write-Host "`nPulsa una tecla para cerrar..."
-$null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
+if (-not $NoPause) {
+    Write-Host "`nPulsa una tecla para cerrar..."
+    try { $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown') } catch { }
+}
