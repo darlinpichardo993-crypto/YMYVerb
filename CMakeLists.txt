@@ -31,6 +31,9 @@ juce_add_plugin(YMYVerb
     VST3_CATEGORIES Fx Reverb
 )
 
+# Generate JuceHeader.h for the source files that include it.
+juce_generate_juce_header(YMYVerb)
+
 target_sources(YMYVerb PRIVATE
     Source/PluginProcessor.cpp
     Source/PluginProcessor.h
