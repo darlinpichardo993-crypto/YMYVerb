@@ -1,0 +1,10 @@
+YMYVerb original project code and UI
+Copyright (c) 2026 ORYMY / YMY Records.
+
+This package is supplied to ORYMY for development and evaluation. Do not redistribute
+modified or unmodified copies of the YMYVerb project or binaries as a third-party
+commercial product without permission from the rights holder.
+
+JUCE is not included in this archive. JUCE is downloaded separately during the build
+and is governed by the JUCE project's own license and terms, which must be reviewed
+independently before commercial distribution.

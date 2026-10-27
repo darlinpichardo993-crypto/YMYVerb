@@ -1,0 +1,17 @@
+YMYVerb - estado de desarrollo
+
+Entregado en este paquete:
+- proyecto JUCE/CMake para VST3 Windows x64
+- DSP: pre-delay manual/sincronizado al host, reverb estéreo, filtros, warmth, ducking, wet/dry y wet-only
+- presets de referencia estética para seis sabores de bachata
+- GUI vectorial con micrófono luminoso y controles analógicos sobrios
+- scripts de compilación Windows e instalador Inno Setup
+- workflow opcional de GitHub Actions para compilar en Windows y publicar un artifact
+
+Pendiente de verificar en Windows real:
+- compilar con JUCE 9.0.4 / Visual Studio 2022
+- cargar en FL Studio y confirmar escaneo VST3
+- medir latencia, CPU, automatización y restauración de estado del DAW
+- escuchar/ajustar los presets con voces reales y distintos BPM
+
+No afirmar que el plugin está probado hasta completar esas pruebas.
