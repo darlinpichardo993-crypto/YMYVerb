@@ -314,6 +314,11 @@ void YMYVerbAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
     }
 }
 
+juce::AudioProcessorEditor* YMYVerbAudioProcessor::createEditor()
+{
+    return new YMYVerbAudioProcessorEditor (*this);
+}
+
 void YMYVerbAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
     if (auto xml = parameters.copyState().createXml())
