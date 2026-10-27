@@ -25,7 +25,7 @@ YMYVerb es un efecto de reverb vocal para bachata. La idea es colocar la voz en 
 ### Requisitos
 
 1. Windows 10/11 de 64 bits.
-2. Visual Studio 2022 o Build Tools 2022 con **Desktop development with C++** y un Windows SDK.
+2. Visual Studio 2022/2026 o la versión correspondiente de Build Tools, con **Desktop development with C++** y un Windows SDK. El script detecta automáticamente el generador disponible.
 3. CMake 3.22 o superior y Git disponibles en `PATH`.
 4. Conexión a Internet la primera vez para descargar JUCE 9.0.4 del repositorio oficial.
 5. Inno Setup 6 para generar `YMYVerb-Setup.exe`. Si no está instalado, el script genera el bundle VST3 y explica que falta ese paso.
