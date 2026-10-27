@@ -25,12 +25,13 @@ if (-not (Test-Path (Join-Path $jucePath 'CMakeLists.txt'))) {
 }
 
 $buildPath = Join-Path $PSScriptRoot 'build'
-$vswherePath = Join-Path `${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
+$programFilesX86 = [Environment]::GetFolderPath('ProgramFilesX86')
+$vswherePath = Join-Path $programFilesX86 'Microsoft Visual Studio\Installer\vswhere.exe'
 $generator = $null
 if (Test-Path $vswherePath) {
     $installationVersion = & $vswherePath -latest -property installationVersion
     if ($LASTEXITCODE -eq 0 -and $installationVersion) {
-        $majorVersion = [int](($installationVersion -split '\\.')[0])
+        $majorVersion = [int](($installationVersion -split '[.]')[0])
         if ($majorVersion -ge 18) { $generator = 'Visual Studio 18 2026' }
         elseif ($majorVersion -ge 17) { $generator = 'Visual Studio 17 2022' }
         elseif ($majorVersion -ge 16) { $generator = 'Visual Studio 16 2019' }
