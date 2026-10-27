@@ -1,3 +1,5 @@
+param([switch]$NoPause)
+
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
 Set-Location $PSScriptRoot
@@ -71,5 +73,7 @@ if ($isccPath) {
     Write-Host "VST3: $pluginOut"
 }
 
-Write-Host "`nPulsa una tecla para cerrar..."
-$null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
+if (-not $NoPause) {
+    Write-Host "`nPulsa una tecla para cerrar..."
+    try { $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown') } catch { }
+}

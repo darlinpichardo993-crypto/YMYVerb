@@ -40,7 +40,7 @@ YMYVerb es un efecto de reverb vocal para bachata. La idea es colocar la voz en 
 
 La compilación se hace en tu equipo Windows porque el artefacto VST3 de Windows y el instalador `.exe` requieren la toolchain de Windows. Este paquete es el código fuente y la automatización de construcción, no un binario precompilado.
 
-**Opción de compilación en GitHub:** el ZIP también incluye `.github/workflows/build-windows.yml`. Si subes el proyecto a un repositorio nuevo en tu GitHub, la acción compila el VST3 y `YMYVerb-Setup.exe`; después entra en **Actions → Build YMYVerb for Windows → Artifacts** y descarga `YMYVerb-Windows-x64`. Es necesario que el primer commit incluya el workflow y que Actions esté habilitado en ese repositorio.
+**Compilación automática en GitHub:** este repositorio incluye `.github/workflows/build-windows.yml`. Cada push, pull request o ejecución manual intenta compilar el VST3 y crear `YMYVerb-Setup.exe` en Windows. Cuando el workflow termine correctamente, abre **Actions → Build YMYVerb for Windows → Artifacts** y descarga `YMYVerb-Windows-x64`.
 
 ## Primeros ajustes recomendados
 
@@ -55,7 +55,7 @@ Los nombres de artistas describen referencias estéticas de presets, no ajustes 
 
 Incluye: procesador JUCE/C++, VST3 via CMake, presets iniciales, sincronización al host, DSP de pre-delay, filtro de entrada, control de mezcla, ducking, indicador reactivo y script del instalador.
 
-**No se ha podido compilar ni validar el plugin dentro de esta sesión**: el entorno de trabajo disponible es Linux sin la cadena de compilación de Windows, y no dispone de acceso de red de shell para descargar JUCE. Antes de usarlo en una sesión importante, hay que compilarlo y probarlo en FL Studio o un host VST3; si el compilador detecta un error, conserva el mensaje exacto para corregirlo.
+**Verificación pendiente:** el workflow automático permite comprobar la compilación real en Windows; un resultado correcto de CI confirma que se generaron los entregables, pero no sustituye una prueba auditiva del plugin en FL Studio. Esa última validación debe hacerse con voces y proyectos reales.
 
 ## Licencia y dependencias
 
